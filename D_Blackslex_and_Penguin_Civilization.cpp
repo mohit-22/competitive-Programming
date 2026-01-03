@@ -14,7 +14,7 @@ void amit(vector<pair<int,int>>vp,vector<int> a){
     }
 }
 int main() {
-    ios::sync_with_stdio(false);
+    ios::sync_with_stdio(false) ;
     cin.tie(nullptr);
     int t; if(!(cin>>t)) return 0;
     while(t--){

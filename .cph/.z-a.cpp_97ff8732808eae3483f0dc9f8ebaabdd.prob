@@ -1,0 +1,1 @@
+{"name":"Local: z-a","url":"c:\\Users\\Mohit\\OneDrive\\Desktop\\Mohit Coding dpp\\z-a.cpp","tests":[{"id":1743608666611,"input":"5\n1\n4\n7\n9\n14\n","output":"Square\nCircle\nTriangle\nTriangle\nCircle\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Mohit\\OneDrive\\Desktop\\Mohit Coding dpp\\z-a.cpp","group":"local","local":true}

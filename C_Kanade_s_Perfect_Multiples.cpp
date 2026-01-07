@@ -1,138 +1,207 @@
-// #include <bits/stdc++.h>
+// #include <iostream>
+// #include <vector>
+// #include <queue>
+
 // using namespace std;
 
-// #define int long long
+// void bfs_T(int n, vector<vector<int>> &adj, vector<int> &dpt, vector<int> &parent, int &mx_d) {
+//     queue<int> q;
+//     q.push(1);
 
-// int32_t main(){
+//     dpt[1] = 1;
+//     parent[1] = -1;
+//     mx_d = 1;
+
+//     while (!q.empty()) {
+//         int current = q.front();
+//         q.pop();
+
+//         int sz = adj[current].size();
+//         for (int idx = 0; idx < sz; idx++) {
+//             int next = adj[current][idx];
+
+//             if (parent[current] == next) continue;
+
+//             parent[next] = current;
+//             dpt[next] = dpt[current] + 1;
+
+//             if (dpt[next] > mx_d) {
+//                 mx_d = dpt[next];
+//             }
+
+//             q.push(next);
+//         }
+//     }
+// }
+
+// void fill_ct(int n, vector<int> &dpt, vector<int> &parent, vector<int> &cnt, vector<int> &cc) {
+//     for (int i = 1; i <= n; i++) {
+//         cnt[ dpt[i] ]++;
+//     }
+
+//     for (int i = 1; i <= n; i++) {
+//         if (parent[i] != -1) {
+//             cc[ parent[i] ]++;
+//         }
+//     }
+// }
+
+// void fill_mx_chi(int n, vector<int> &dpt, vector<int> &cc, vector<int> &mx_cht) {
+//     for (int node = 1; node <= n; node++) {
+//         int level = dpt[node];
+//         int c = cc[node];
+
+//         if (c > mx_cht[level]) {
+//             mx_cht[level] = c;
+//         }
+//     }
+// }
+
+// int cl_Ans(int mx_d, vector<int> &cnt, vector<int> &mx_cht) {
+//     int answer = 0;
+
+//     for (int d = 1; d < mx_d; ++d) {
+//         if (cnt[d] > answer) {
+//             answer = cnt[d];
+//         }
+
+//         if (mx_cht[d] == cnt[d + 1]) {
+//             int need = cnt[d + 1] + 1;
+//             if (need > answer) {
+//                 answer = need;
+//             }
+//         }
+//     }
+
+//     if (mx_d >= 1 && cnt[mx_d] > answer) {
+//         answer = cnt[mx_d];
+//     }
+
+//     return answer;
+// }
+
+// int main() {
+//     ios::sync_with_stdio(false);
+//     cin.tie(nullptr);
+
 //     int t;
 //     cin >> t;
-//     while(t--){
-//         int n,k;
-//         cin >> n>>k;
-//         int arr[n];
-//         vector<int>present(k+1,false);
-//         for(int i=0 ; i<n ; i++){
-//             cin>>arr[i];
-//             present[arr[i]]=true;
-//         }
-//         int mx = *max_element(arr,arr+n);
+//     while (t--) {
+//         int n;
+//         cin >> n;
 
-//         sort(arr,arr+n);
-//         set<int>s;
-//         for(auto it:arr){
-//             s.insert(it);
-//         }
-//         vector<int>b;
-//         vector<bool>check(k+1,false);
-
-
-//         for(int i=1 ; i<=k ; i++){
-//             if(!present[i]) continue;
-//             for(int j=i*2 ; j<=k ; j+=i){
-//                 if(present[j]){
-//                     check[j]=true;
-//                 }
-//             }
+//         vector<vector<int>> adj(n + 1);
+//         for (int i = 0; i < n - 1; i++) {
+//             int u, v;
+//             cin >> u >> v;
+//             adj[u].push_back(v);
+//             adj[v].push_back(u);
 //         }
 
-//         for (int i = 1; i <= k; i++) {
-//             if (present[i] && !check[i]) {
-//                 b.push_back(i);
-//             }
-//         }
+//         vector<int> dpt(n + 1, 0);
+//         vector<int> parent(n + 1, 0);
+//         int mx_d = 1;
 
+//         bfs_T(n, adj, dpt, parent, mx_d);
 
-//         bool flag = true;
-//         for(int x : b){
-//             for(int i = x ; i <= k ; i += x){
-//                 if(!present[i]){
-//                     flag  = false;
-//                 }
-//             }
-//         }
+//         vector<int> cnt(mx_d + 2, 0);
+//         vector<int> cc(n + 1, 0);
 
-//         if(!flag) cout<<-1<<endl;
-//         else{
-//             cout<<b.size()<<endl;
-//             for(auto x:b){
-//                 cout<<x<<" ";
-//             }
-//             cout<<endl;
-//         }
-        
-        
+//         fill_ct(n, dpt, parent, cnt, cc);
+
+//         vector<int> mx_cht(mx_d + 2, 0);
+
+//         fill_mx_chi(n, dpt, cc, mx_cht);
+
+//         int answer = cl_Ans(mx_d, cnt, mx_cht);
+
+//         cout << answer << '\n';
 //     }
+
 //     return 0;
 // }
 
 
-#include <bits/stdc++.h>
+
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <map>
+
 using namespace std;
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+void bfs_T(int n, vector<vector<int>> &adj, vector<int> &dpt, vector<int> &parent, int &mx_d) {
+    queue<int> q;
+    q.push(1);
 
-    int t;
-    cin >> t;
+    dpt[1] = 1;
+    parent[1] = -1;
+    mx_d = 1;
 
-    while (t--) {
-        int n;
-        long long k;
-        cin >> n >> k;
+    while (!q.empty()) {
+        int current = q.front();
+        q.pop();
 
-        vector<long long> arr(n);
-        unordered_set<long long> st;
+        int sz = adj[current].size();
+        for (int idx = 0; idx < sz; idx++) {
+            int next = adj[current][idx];
 
-        for (int i = 0; i < n; i++) {
-            cin >> arr[i];
-            st.insert(arr[i]);
-        }
+            if (parent[current] == next) continue;
 
-       
-        vector<long long> v(st.begin(), st.end());
-        sort(v.begin(), v.end());
+            parent[next] = current;
+            dpt[next] = dpt[current] + 1;
 
-        long long mx = v.back();
-
-     c
-        unordered_set<long long> covered;
-
-        for (long long x : v) {
-            for (long long mult = 2 * x; mult <= mx; mult += x) {
-                if (st.count(mult)) {
-                    covered.insert(mult);
-                }
+            if (dpt[next] > mx_d) {
+                mx_d = dpt[next];
             }
+
+            q.push(next);
+        }
+    }
+}
+
+void fill_ct(int n, vector<int> &dpt, vector<int> &parent, vector<int> &cnt, vector<int> &cc) {
+    for (int i = 1; i <= n; i++) {
+        cnt[ dpt[i] ]++;
+    }
+
+    for (int i = 1; i <= n; i++) {
+        if (parent[i] != -1) {
+            cc[ parent[i] ]++;
+        }
+    }
+}
+
+void fill_mx_chi(int n, vector<int> &dpt, vector<int> &cc, vector<int> &mx_cht) {
+    for (int node = 1; node <= n; node++) {
+        int level = dpt[node];
+        int c = cc[node];
+
+        if (c > mx_cht[level]) {
+            mx_cht[level] = c;
+        }
+    }
+}
+
+int cl_Ans(int mx_d, vector<int> &cnt, vector<int> &mx_cht) {
+    int answer = 0;
+
+    for (int d = 1; d < mx_d; ++d) {
+        if (cnt[d] > answer) {
+            answer = cnt[d];
         }
 
-        vector<long long> B;
-        for (long long x : v) {
-            if (!covered.count(x)) {
-                B.push_back(x);
+        if (mx_cht[d] == cnt[d + 1]) {
+            int need = cnt[d + 1] + 1;
+            if (need > answer) {
+                answer = need;
             }
-        }
-
-        bool ok = true;
-        for (long long x : B) {
-            for (long long mult = x; mult <= k; mult += x) {
-                if (!st.count(mult)) {
-                    ok = false;
-                    break;
-                }
-            }
-            if (!ok) break;
-        }
-
-     
-        if (!ok) {
-            cout << -1 << "\n";
-        } else {
-            cout << B.size() << "\n";
-            for (long long x : B) cout << x << " ";
-            cout << "\n";
         }
     }
 
-    return 0;
-}
+    if (mx_d >= 1 && cnt[mx_d] > answer) {
+        answer = cnt[mx_d];
+    }
+

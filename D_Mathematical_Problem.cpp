@@ -12,7 +12,7 @@ int evaluate(string &a, string &b) {
     string cur = "";
     cur += a[0];
 
-    for (long long i = 0; i < b.size(); i++) {
+    for (long long i = 0; i < b.size();  i++) {
         if (b[i] == '/') {
             // concatenate
             cur += a[i + 1];

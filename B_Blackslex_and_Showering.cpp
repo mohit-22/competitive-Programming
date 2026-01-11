@@ -1,106 +1,66 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define int long long
+long getMinimumSize(vector<int> payloadSize, vector<int> cacheA, vector<int> cacheB, int minThreshold) {
+    
 
-int32_t main(){
-    int t;
-    cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        int arr[n],brr[n];
-        for(int i=0 ; i<n ; i++){
-            cin>>arr[i];
-        }
-        for(int i=0 ; i<n ; i++){
-            cin>>brr[i];
-        }
-        vector<int>v;
-        int ma=0,mb=0;
-        for(int i=0  ;i<n ; i++){
-            if(arr[i]==brr[i]) v.push_back(arr[i]);
-            else if(arr[i]>brr[i]) ma+=arr[i];
-            else mb+=brr[i];
-        }
+    int n = (int)payloadSize.size();
+    vector<int> both, onlyA, onlyB;
 
-        sort(v.begin(),v.end());
-        int ct0=0,ct1=0,ct11=0;
-        for(int i=0 ; i<v.size() ; i++){
-            if(v[i]==-1) ct11++;
-            else if(v[i]==0) ct0++;
-            else ct1++;
-        }
-        if(mb>ma){
-            // mb = min(mb-ma,ct11);
-            if(mb-ma>=ct11){
-                mb-=ct11;
-                ct11=0;
-            }else{
-                ct11-=(mb-ma);
-                mb-=(mb-ma);
-                
-            }
+    for (int i = 0; i < n; i++) {
+    int type = cacheA[i] + cacheB[i];
 
-        }
-        else{
-            if(ma-mb>=ct11){
-                ma-=ct11;
-                ct11=0;
-            }else{
-                ct11-=(ma-mb);
-                ma-=(ma-mb);
-                
-            }
-        }
-        int q = ct11/2;
-        int r = ct11%2;
-        if(q>=1){
-            ma-=q;
-            mb-=q;
-        }
-        if(r==1){
-            // ma-=1;
-            if(mb>ma) mb-=1;
-            else ma-=1;
-        }
-        
-
-
-        if(mb>ma){
-            // mb = min(mb-ma,ct11);
-            if(mb-ma>=ct1){
-                ma+=ct1;
-                ct1=0;
-            }else{
-                ct1-=(mb-ma);
-                ma+=(mb-ma);
-                
-            }
-
-        }
-        else{
-            if(ma-mb>=ct1){
-                mb+=ct1;
-                ct1=0;
-            }else{
-                ct1-=(ma-mb);
-                mb+=(ma-mb);
-                
-            }
-        }
-        int q1 = ct1/2;
-        int r1 = ct1%2;
-        if(q1>=1){
-            ma+=q1;
-            mb+=q1;
-        }
-        if(r1==1){
-            if(mb>=ma) ma+=1;
-            else mb+=1;
-        }
-        cout<<min(ma,mb)<<endl;
-
+    if (type == 2) {
+        both.push_back(payloadSize[i]);
+    } else if (type == 1) {
+        if (cacheA[i]) onlyA.push_back(payloadSize[i]);
+        else onlyB.push_back(payloadSize[i]);
     }
-    return 0;
+}
+
+    sort(both.begin(), both.end());
+    sort(onlyA.begin(), onlyA.end());
+    sort(onlyB.begin(), onlyB.end());
+
+    auto make_prefix = [](const vector<int>& v) {
+        vector<long long> pref(v.size() + 1, 0);
+        int i = 0;
+        while (i < (int)v.size()) {
+            pref[i + 1] = pref[i] + v[i];
+            i++;
+        }
+        return pref;
+    };
+
+    vector<long long> prefBoth = make_prefix(both);
+    vector<long long> prefA = make_prefix(onlyA);
+    vector<long long> prefB = make_prefix(onlyB);
+
+
+    long long ans = LLONG_MAX;
+    int maxBoth = (int)both.size();
+    int sizeA = (int)onlyA.size();
+    int sizeB = (int)onlyB.size();
+
+    for (int k = 0; k <= maxBoth; k++) {
+        int need = minThreshold - k;
+        if (need < 0) need = 0;
+
+        if (need <= sizeA && need <= sizeB) {
+            long long part1 = prefBoth[k];
+            long long part2 = prefA[need];
+            long long part3 = prefB[need];
+
+            long long cost = part1 + part2 + part3;
+            if (cost < ans) {
+                ans = cost;
+            }
+        }
+    }
+
+    if (ans == LLONG_MAX) {
+        return -1;
+    }
+    return ans;
+
 }

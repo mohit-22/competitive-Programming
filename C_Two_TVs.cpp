@@ -6,7 +6,7 @@ using namespace std;
 int32_t main(){
     int n;
     cin>>n;
-    vector<pair<int,int>>vp;
+    vector<pair<int,int>>vp ;
     while(n--){
         int l,r;
         cin>>l>>r;

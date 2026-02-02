@@ -1,71 +1,45 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 
-#define int long long
-
-int32_t main(){
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
     int t;
-    cin >> t;
-    while(t--){
+    if (!(cin >> t)) return 0;
+    while (t--) {
         int n;
         cin >> n;
-        int arr[n],brr[n];
-        bool flag = true;
-        for(int i=0 ; i<n ; i++){
-            cin>>arr[i];
-            
-        }
-        for(int i=0 ; i<n ; i++){
-            cin>>brr[i];
+        vector<ll> p(n), s(n);
+        for (int i = 0; i < n; ++i) cin >> p[i];
+        for (int i = 0; i < n; ++i) cin >> s[i];
+
+        bool ok = true;
+        for (int i = 1; i < n && ok; ++i) if (p[i-1] % p[i] != 0) ok = false;
+        for (int i = 0; i+1 < n && ok; ++i) if (s[i+1] % s[i] != 0) ok = false;
+        if (!ok) {
+            cout << "No\n";
+            continue;
         }
 
-        for(int i=1 ; i<n ; i++){
-            if(arr[i]>arr[i-1]){
-                flag=false;
-                break;
-            }
-            if(brr[i]<brr[i-1]){
-                flag=false;
-                break;
-            }
-            
-        }
-        
-        int crr[n];
-        for(int i=0 ; i<n ; i++){
-            crr[i] = lcm(arr[i],brr[i]);
-            if(arr[i]%brr[i]!=0 && brr[i]%arr[i]!=0){
-                flag = false;
-                break;
-            }
+        vector<ll> b(n);
+        for (int i = 0; i < n; ++i) {
+            ll g = std::gcd(p[i], s[i]);
+            ll l = (p[i] / g) * s[i];
+            b[i] = l;
         }
 
-        for(int i=1 ; i<n ; i++){
-            if(gcd(crr[i],arr[i-1])!=arr[i]){
-                flag=false;
-                break;
-            }
-        }
+        vector<ll> pref(n), suf(n);
+        pref[0] = b[0];
+        for (int i = 1; i < n; ++i) pref[i] = std::gcd(pref[i-1], b[i]);
+        suf[n-1] = b[n-1];
+        for (int i = n-2; i >= 0; --i) suf[i] = std::gcd(suf[i+1], b[i]);
 
-        for(int i=n-2 ; i>=0 ; i--){
-            if(gcd(crr[i],brr[i+1])!=brr[i]){
-                flag = false;
-                break;
-            }
+        bool match = true;
+        for (int i = 0; i < n; ++i) {
+            if (pref[i] != p[i] || suf[i] != s[i]) { match = false; break; }
         }
-
-        if(n==1){
-            if(arr[0]==brr[0]) cout<<"YES"<<endl;
-            else cout<<"NO"<<endl;
-        }
-        else{
-            if(!flag) cout<<"NO"<<endl;
-            else cout<<"YES"<<endl;
-        }
-
-
-        
-        
+        cout << (match ? "Yes\n" : "No\n");
     }
     return 0;
 }

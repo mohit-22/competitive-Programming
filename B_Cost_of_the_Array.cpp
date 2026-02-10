@@ -15,7 +15,7 @@ int main() {
         if (k == n) {
             int ans = half + 1;
             for (int i = 1; i < n; i += 2) {
-                int expected = (i + 1) / 2;
+                int expected = (i + 1) / 2 ;
                 if (a[i] != expected) { ans = expected; break; }
             }
             cout << ans << '\n';

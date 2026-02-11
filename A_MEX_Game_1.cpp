@@ -1,55 +1,27 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define int long long
-
-int32_t main(){
-    int t;
-    cin >> t;
-    while(t--){
-        int n;
-        cin >> n;
-        multiset<int>s;
-        for(int i=0 ; i<n ; i++){
-            int x;
-            cin>>x;
-            s.insert(x);
-        }
-        auto p = s.begin();
-        int q = *p;
-        int w = 0;
-        while(!s.empty()){
-            int x = w;
-            if(s.find(x)==s.end()){
-                cout<<x<<endl;
-                break;
-            }
-            else{
-                auto y = s.lower_bound(x+1);
-                auto z = s.upper_bound(x+1);
-                z--;
-                if(y!=s.end()){
-                    s.erase(y);
-                    if(s.find(x+1)==s.end()){
-                        cout<<x+1<<endl;
-                        break;
-                    }
-                }
-                else{
-                    cout<<x+1<<endl;
-                    break;
-                }
-                auto it = s.find(w);   // find gives iterator to first occurrence
-                if(it != s.end()){
-                    s.erase(it);  // erases only that one occurrence
-                }
-                w++;
-
-                
-            }
-            // s.erase(x);
-
-        }
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t; 
+    if (!(cin >> t)) return 0;
+    while (t--) {
+        int n; cin >> n;
+        vector<int> a(n);
+        for (int i = 0; i < n; ++i) cin >> a[i];
+        vector<int> cnt(n+5, 0);
+        for (int x : a) if (x < (int)cnt.size()) cnt[x]++;
+        // p = first i with cnt[i] == 0
+        int p = 0;
+        while (p < (int)cnt.size() && cnt[p] > 0) ++p;
+        // gather indices with cnt == 1
+        vector<int> ones;
+        for (int i = 0; i < (int)cnt.size(); ++i) if (cnt[i] == 1) ones.push_back(i);
+        int q = INT_MAX;
+        if ((int)ones.size() >= 2) q = ones[1];
+        int ans = min(p, q == INT_MAX ? INT_MAX : q);
+        cout << ans << '\n';
     }
     return 0;
 }

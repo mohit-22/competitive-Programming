@@ -15,7 +15,7 @@ int main() {
             cout << "Bob\n";
             continue;
         }
-        vector<int> pos;
+        vector<int> pos ;
         for (int i = 0; i < n; ++i) if (s[i] != t[i]) pos.push_back(i+1);
         cout << "Alice\n";
         cout << pos.size() << "\n";

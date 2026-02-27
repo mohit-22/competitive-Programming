@@ -3,51 +3,31 @@ using namespace std;
 using ll = long long;
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int T;
-    cin >> T;
+    cin>>T;
     while (T--) {
         int n;
         cin >> n;
+        vector<int> A(n), B(n), C(n);
+        for (int i = 0; i < n; ++i) cin >> A[i];
+        for (int i = 0; i < n; ++i) cin >> B[i];
+        for (int i = 0; i < n; ++i) cin >> C[i];
 
-        vector<int> a(n), b(n), c(n);
-        for (int i = 0; i < n; i++) cin >> a[i];
-        for (int i = 0; i < n; i++) cin >> b[i];
-        for (int i = 0; i < n; i++) cin >> c[i];
-
-        vector<bool> goodAB(n, true), goodBC(n, true);
-
-        // Check all shifts x for a[p] < b[p + x]
-        for (int x = 0; x < n; x++) {
-            for (int p = 0; p < n; p++) {
-                if (a[p] >= b[(p + x) % n]) {
-                    goodAB[x] = false;
-                    break;
+        auto countGoodShifts = [&](const vector<int>& X, const vector<int>& Y) -> int {
+            int cnt = 0;
+            for (int s = 0; s < n; ++s) {
+                bool ok = true;
+                for (int u = 0; u < n; ++u) {
+                    if (!(X[u] < Y[(u + s) % n])) { ok = false; break; }
                 }
+                if (ok) ++cnt;
             }
-        }
+            return cnt;
+        };
 
-        // Check all shifts y for b[p] < c[p + y]
-        for (int y = 0; y < n; y++) {
-            for (int p = 0; p < n; p++) {
-                if (b[p] >= c[(p + y) % n]) {
-                    goodBC[y] = false;
-                    break;
-                }
-            }
-        }
-
-        ll cntAB = 0, cntBC = 0;
-        for (int i = 0; i < n; i++) {
-            if (goodAB[i]) cntAB++;
-            if (goodBC[i]) cntBC++;
-        }
-
-        ll answer = (ll)n * cntAB * cntBC;
-        cout << answer << '\n';
+        int cntAB = countGoodShifts(A, B);
+        int cntBC = countGoodShifts(B, C);
+        ll ans = (ll) n * cntAB * cntBC;
+        cout << ans << '\n';
     }
-
-    return 0;
 }
